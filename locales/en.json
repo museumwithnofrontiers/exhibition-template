@@ -1,0 +1,8 @@
+{
+  "__SITE_NAMESPACE__.credits.body": "TODO(texts): replaced by the texts PR (recipe step 5) — scripts/site-i18n extraction. Leave as-is until then.",
+  "__SITE_NAMESPACE__.partner.monumentsInExhibition": "monument(s) in this Exhibition",
+  "__SITE_NAMESPACE__.partnerObjects.emptyInstitution": "This institution holds nothing in this Exhibition.",
+  "__SITE_NAMESPACE__.partnerObjects.emptyPartner": "This partner holds nothing in this Exhibition.",
+  "__SITE_NAMESPACE__.partnerObjects.institutionProfile": "Institution Profile",
+  "__SITE_NAMESPACE__.partnerObjects.partnerProfile": "Partner Profile"
+}
