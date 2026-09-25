@@ -43,6 +43,13 @@ admin rights, unlike `website-template`'s tool-driven flow. You do need a
 GitHub account and, from step 3 onward, `gh` installed and logged in
 (`gh auth login`).
 
+An operator with admin rights on the organization can do steps 1 to 3 in one
+go instead, with viewer-workflows' `tools/new-website.mjs`: it creates the
+repository from this template, applies the same settings as the setup script,
+replaces the placeholders — the palette from a `--palette` file — installs the
+dataset package and opens the first pull request (`--class exhibition`; see its
+MAINTENANCE.md, "Creating a website"). Both paths end in the same site.
+
 ### 0. Before you start: the dataset package
 
 This template does not create a dataset package — that belongs to
@@ -94,6 +101,9 @@ Three tokens appear across `package.json`, `vite.config.js`, `index.html`,
 - `__SITE_NAMESPACE__` — this website's own texts namespace: one lowercase
   word, no hyphens (`carpets`, `waterInIslam`).
 
+Set the exhibition's own colours too, the `__PALETTE_…__` placeholders of
+`src/styles/site.css` — step 7 says where they are.
+
 Then install the dataset package itself, which writes the real version
 range and the lockfile in one step:
 
@@ -102,8 +112,8 @@ npm install @museumwnf/<dataset>-data@latest
 ```
 
 `scripts/check-placeholders.js` (a `preinstall` hook) refuses to let `npm
-install` proceed while any of the three tokens survive, and separately
-catches the placeholder dependency version (`0.0.0-REPLACE-ME`) if step 0
+install` proceed while any of the three tokens or a palette colour survive,
+and separately catches the placeholder dependency version (`0.0.0-REPLACE-ME`) if step 0
 was skipped.
 
 ### 4. The curatorial picks
@@ -143,8 +153,10 @@ and needs nothing here.
 ### 7. Theme (visual)
 
 See "Webdesigner — theming the website" below for the palette
-(`theme/tokens.css`), currently carrying water-in-islam's own example,
-marked `TODO(webdesigner)`.
+(`theme/tokens.css`). The exhibition's six colours in `src/styles/site.css` are
+placeholders (`__PALETTE_…__`) until you set them, and `npm install` refuses to
+run while one is left: legacy's `VUE_APP_VO_*` values, read off the legacy
+exhibition's compiled stylesheet (the comment above them says how).
 
 ### 8. Merge, record and discover
 
@@ -200,9 +212,9 @@ inside it.
 
 The website's whole visual identity lives in the `theme/` folder:
 `tokens.css` (colors, fonts, spacing — the normal surface), `overrides.css`
-(escape hatch) and `assets/` (logo, banner, sponsor images). `tokens.css`
-currently carries water-in-islam's own palette, marked `TODO(webdesigner)`
-at the top — replace every value with your exhibition's own colours.
+(escape hatch) and `assets/` (logo, banner, sponsor images). The palette itself
+is the six colours in `src/styles/site.css` (step 7 above); `tokens.css` reads
+them, so a colour change is made there once.
 
 Small changes can be made straight in the browser with the pencil button,
 like the translator flow above — styling changes are reviewed, they do not

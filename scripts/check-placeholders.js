@@ -12,6 +12,9 @@
 //     src/dataset.config.js                -> only this script catches it
 //   - __SITE_NAME__ / __SITE_NAMESPACE__
 //     left as they are                     -> only this script catches it
+//   - a __PALETTE_…__ colour left in
+//     src/styles/site.css                  -> only this script catches it
+//     (inventory-app#2046/#2047: a new site never ships another's colours)
 //
 // The curatorial picks (`projectColors`/`noticeProjects` in
 // src/dataset.config.js) are deliberately NOT guarded here: unlike a name or
@@ -51,6 +54,10 @@ const TEXT_PLACEHOLDERS = {
     '(e.g. carpets, waterInIslam)',
 }
 
+// The palette: this website's own colours, which no default could be.
+const PALETTE_FILE = 'src/styles/site.css'
+const PALETTE_PLACEHOLDER = /__PALETTE_[A-Z_]+__/g
+
 const read = (file) => {
   try {
     return readFileSync(file, 'utf8')
@@ -69,7 +76,9 @@ const unreplacedText = Object.keys(TEXT_PLACEHOLDERS).filter((placeholder) =>
   CONFIGURED_FILES.some((file) => read(file).includes(placeholder)),
 )
 
-if (unreplaced.length === 0 && !hasPlaceholderVersion && unreplacedText.length === 0) {
+const unsetColours = [...new Set(read(PALETTE_FILE).match(PALETTE_PLACEHOLDER) ?? [])]
+
+if (unreplaced.length === 0 && !hasPlaceholderVersion && unreplacedText.length === 0 && unsetColours.length === 0) {
   process.exit(0)
 }
 
@@ -87,6 +96,16 @@ if (unreplacedText.length > 0) {
     lines.push(`    ${TEXT_PLACEHOLDERS[placeholder]}.`)
   }
   lines.push('')
+}
+
+if (unsetColours.length > 0) {
+  lines.push(
+    `  The palette in ${PALETTE_FILE} is not set: ${unsetColours.join(', ')}.`,
+    '  Set the exhibition’s six colours, legacy’s VUE_APP_VO_* values, read off',
+    '  the legacy exhibition’s compiled stylesheet (the comment above them in',
+    '  src/styles/site.css says how).',
+    '',
+  )
 }
 
 if (hasPlaceholderVersion) {
