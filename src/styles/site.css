@@ -47,22 +47,6 @@
   --link-blue:   #0000ff;
   --rule-grey:   #e0e0e0;
 
-  /* Source-project accents — legacy's #info-citation-link colouring, one
-     tone per project family this exhibition actually borrows from. Epic
-     #1727 phase 4: these no longer feed viewer-layout's shared
-     `mwnf-chip--<family>` classes through `--mwnf-project-*` tokens — this
-     exhibition no longer computes a "family" from a legacy project key at
-     all, so it defines its own `mwnf-chip--<name>` rules directly, below,
-     instead.
-     TODO(webdesigner): keep only the accents your own dataset's borrowed
-     projects (see src/dataset.config.js's projectColors) actually need. */
-  --dia-yellow:    #ffcc00;  /* Discover Islamic Art */
-  --sh-red:        #900000;  /* Sharing History */
-  --dga-blue:      #0059bf;  /* Discover Glass Art */
-  --explore-green: #006950;  /* Explore monuments database (no project at all) */
-  --g-grey:        #263238;  /* MWNF Galleries */
-  --exhibitions:   #7f01d4;  /* This exhibition's own native project, and other exhibition-sourced projects */
-
   /* The database half of this site — collection search and results, the item
      sheet, partners, the timeline — is the gallery client's, and carries
      several hundred CSS rules that address the palette by the gallery variable

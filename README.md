@@ -12,21 +12,14 @@ and a new kind of product from
 [`website-template`](https://github.com/museumwithnofrontiers/website-template),
 the generic scaffold. The three templates stay separate on purpose (decision
 D5 of the platform's [architecture reference](https://github.com/museumwithnofrontiers/inventory-app/issues/1510), which also says
-what goes where across the packages). The pages every exhibition shares come
-from the DXA family layer, the `/dxa` entries of `@museumwnf/viewer-core` and
-`@museumwnf/viewer-layout`; an exhibition keeps its config, theme, texts and
-tests, and the files milestone M10 has not moved into `/dxa` yet
-([inventory-app#2017](https://github.com/museumwithnofrontiers/inventory-app/issues/2017)).
+what goes where across the packages). The pages, page shell, menu, sponsor
+strip and legacy redirects every exhibition shares come from the DXA family
+layer, the `/dxa` entries of `@museumwnf/viewer-core` and
+`@museumwnf/viewer-layout`; an exhibition keeps its own values, theme, texts
+and tests.
 
-> **Before you create an exhibition from this template:** package CI,
-> propagation and the organization site's list find websites through the
-> `website-template` link only. A repository created from this template is
-> not found by any of them until
-> [inventory-app#2018](https://github.com/museumwithnofrontiers/inventory-app/issues/2018)
-> makes the tooling recognise all three templates.
-
-This template ships as a real, working exhibition — water-in-islam's own
-code, as it stood on 2026-09-23 — with the dataset-specific parts turned into
+This template ships as a real, working exhibition — water-in-islam's own, as
+it stood on 2026-09-25 — with the dataset-specific parts turned into
 placeholders and `TODO(dataset):` markers. A new exhibition starts from
 something that already works end to end, and needs its own data swapped in
 rather than built up from nothing.
@@ -132,27 +125,20 @@ in place of them if you want to write your own equivalent later.
 
 **Proof:** `npm run test` and `npm run build` both pass.
 
-### 5. Declare the theme content
+### 5. The theme content
 
-The theme pages (`Theme.vue`, `Themes.vue`, `ThemeGallery.vue`) and their
-specs (`src/composables/themeSpecs.js`, `themes.js`,
-`useThemePictures.js`) read this exhibition's own theme tree from the
-dataset package — nothing to declare by hand here beyond what step 4
-already covers, unless your exhibition's theme shape genuinely differs from
-water-in-islam's (unusual — the shape is shared across every DXA
-exhibition). `src/dataset.config.js`'s `logos` block needs a look if your
-own `logos.json` uses category ids differently — see its
-`TODO(dataset):` comment.
+The theme pages and their specs are the family's, and read this
+exhibition's own theme tree from the dataset package — nothing to declare
+by hand here beyond what step 4 already covers. The shape is shared across
+every DXA exhibition, and so are the sponsor strip's logo categories.
 
 ### 6. Texts
 
-This exhibition's editorial copy — the credits page and the five
-`partnerObjects`/`partner` boilerplate keys — comes from
-`scripts/site-i18n` (in the `inventory-app` checkout) for the credits body,
-and ships with generic wording already in `locales/en.json` for the other
-four (not site-specific — legacy's old
-`PartnerObjects.vue`/`InstitutionMonuments.vue` text). See
-`docs/deployment/new-website.md` step 5 for the credits extraction.
+This exhibition's editorial copy — the credits page — comes from
+`scripts/site-i18n` (in the `inventory-app` checkout); see
+`docs/deployment/new-website.md` step 5 for the extraction. The partner-objects
+wording every exhibition shares is `viewer-i18n`'s `exhibition.*` entries,
+and needs nothing here.
 
 ### 7. Theme (visual)
 
@@ -240,9 +226,9 @@ merge automatically. For real design work, use the live preview:
    **http://localhost:5173** in your browser.
 3. **Edit `theme/`, watch it live.** Every save refreshes the browser
    automatically. `tokens.css` lists every knob with a comment; put images
-   into `theme/assets/` and reference them from `src/dataset.config.js`
-   (banner, sponsor logos, the `logos` block). Anything a token cannot
-   express goes into `overrides.css`. A change to a layout component itself
+   into `theme/assets/` and reference them from the theme's own CSS (the
+   banner and the sponsor logos come from the dataset). Anything a token
+   cannot express goes into `overrides.css`. A change to a layout component itself
    is a request for the `viewer-layout` package — open an issue there and a
    developer pairs on it.
 4. **Propose your changes:** in GitHub Desktop, write a short summary
@@ -261,41 +247,41 @@ real. The pass that imposed them is metanull/inventory-app#1683, and this
 template — a real, working exhibition — already obeys all eleven.
 
 **1. `src/dataset.config.js` is the whole declaration.** Routes, languages,
-shell, media host, outbound links. Before the application mounts, the
-website reads nothing from its package but `manifest.json`. `src/main.js`
-needs no edit after the placeholders are replaced.
+shell, media host, outbound links: `exhibitionConfig` builds them from this
+exhibition's own values. Before the application mounts, the website reads
+nothing from its package but `manifest.json`. `src/main.js` needs no edit
+after the placeholders are replaced.
 
 ### An exhibition website
 
-`@museumwnf/viewer-layout/dxa` exports every platform page already
-composed, and `standardRoutes('exhibition', config)` returns them as route
-entries this website spreads into `extraViews`: the search how-to page, the
-partners list, a partner's (or institution's) profile, the search results
-page, the timeline results page, the timeline gallery, the collection
-results page, the collection search form and a partner's (or institution's)
-objects page — the institution pages share the partner pages' component,
-with no separate route to write. `config.partnerObjects`'s five keys are
-this exhibition's own strings (legacy's now-retired
-`PartnerObjects.vue`/`InstitutionMonuments.vue` text) — the generic wording
-already in `locales/en.json` covers them out of the box.
+`exhibitionConfig(values)` from `@museumwnf/viewer-layout/dxa` returns the
+whole configuration of an exhibition: the shell, the menu, the banner, the
+sponsor strip, the outbound links, the legacy redirects and every page,
+through `standardRoutes('exhibition', { pages: true })` — home, about, the
+themes, a theme and its gallery, the item page, related content, the
+timeline entrance and credits, and the platform pages (the search how-to,
+the partners list, a partner's or institution's profile and objects, the
+search, timeline and collection results, the timeline gallery, the
+collection search form). What it takes is what differs between exhibitions:
+the dataset package, the name, the address, the project chips, the notice
+projects and the credits entry.
 
-Every route name and path the factory registers is pinned inside
+Every route name and path the family registers is pinned inside
 viewer-layout to what every live DXA site already uses — never redeclare
 one of them here, or a second declaration of the same address will drift
-from the first. This website's own routes stay in `src/dataset.config.js`:
-home, about, themes, theme, theme-gallery, item, related, timeline and
-credits — pages that read this dataset's own shape (the theme tree above
-all) rather than the shape the factory already covers.
+from the first. A page that has to differ from the family's is this
+exhibition's own component, registered on the same route name as an
+override of what `exhibitionConfig` returns; a page every exhibition needs
+changed is a change to `@museumwnf/viewer-layout/dxa`.
 
 Full page, prop and slot detail: viewer-layout's README,
 ["DXA family pages"](https://github.com/museumwithnofrontiers/viewer-layout#dxa-family-pages).
 
 **2. Records and translations come from viewer-core, lazily.**
-`loadEntities`, `itemFromUidPath`, `partnerFromKey` — see
-`src/composables/exhibitionData.js`, which is derivation over those and
-holds no state of its own beyond the reactive refs it exports (`countries`,
-`items`, `visiblePartners`, `hasTimeline`). Nothing in `src/` imports
-`@inventory-data` directly, and nothing keeps a second cache. In
+`loadEntities`, `itemFromUidPath`, `partnerFromKey` — the family's data
+layer (`@museumwnf/viewer-core/dxa`) is derivation over those and holds no
+state of its own beyond the reactive refs it exports. Nothing in `src/`
+imports `@inventory-data` directly, and nothing keeps a second cache. In
 particular, never resolve a language with an interpolated dynamic import:
 `` import(`@inventory-data/translations/items.${lang}.json`) `` cannot be
 resolved statically, so a bundler pulls in every language of that entity
@@ -326,8 +312,8 @@ characters it is; when that happens the fix belongs in the importer, not in
 a view.
 
 **7. The shell is `@museumwnf/viewer-layout`'s `SiteShell`, from config.**
-`src/SiteShell.vue` mounts it, filling in the exhibition record's own
-banner image/caption and the `logos` reshaping; the menu, the language
+The family's `ExhibitionShell` mounts it, filling in the exhibition record's
+own banner image/caption and the sponsor logos; the menu, the language
 switcher and the link lists are built by `SiteShell` itself from
 `config.navigation` (see the package's README, "Site shell"). A shape it
 cannot express is a request to
