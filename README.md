@@ -5,16 +5,34 @@ repo (`museumwithnofrontiers/<dataset>`, public) is created **once** from
 this template — it is never installed as a dependency and never updated in
 existing websites.
 
-Unlike [`website-template`](https://github.com/museumwithnofrontiers/website-template)
-(a bare, generic scaffold for any of the three website classes), this
-template ships as a real, working exhibition — water-in-islam's own code,
-as it stood on 2026-09-23 — with the dataset-specific parts turned into
+**Its role.** This template is the starting point for a new exhibition, one
+of the DXA family. A new gallery starts from
+[`gallery-template`](https://github.com/museumwithnofrontiers/gallery-template),
+and a new kind of product from
+[`website-template`](https://github.com/museumwithnofrontiers/website-template),
+the generic scaffold. The three templates stay separate on purpose (decision
+D5 of the platform's [architecture reference](https://github.com/museumwithnofrontiers/inventory-app/issues/1510), which also says
+what goes where across the packages). The pages every exhibition shares come
+from the DXA family layer, the `/dxa` entries of `@museumwnf/viewer-core` and
+`@museumwnf/viewer-layout`; an exhibition keeps its config, theme, texts and
+tests, and the files milestone M10 has not moved into `/dxa` yet
+([inventory-app#2017](https://github.com/museumwithnofrontiers/inventory-app/issues/2017)).
+
+> **Before you create an exhibition from this template:** package CI,
+> propagation and the organization site's list find websites through the
+> `website-template` link only. A repository created from this template is
+> not found by any of them until
+> [inventory-app#2018](https://github.com/museumwithnofrontiers/inventory-app/issues/2018)
+> makes the tooling recognise all three templates.
+
+This template ships as a real, working exhibition — water-in-islam's own
+code, as it stood on 2026-09-23 — with the dataset-specific parts turned into
 placeholders and `TODO(dataset):` markers. A new exhibition starts from
 something that already works end to end, and needs its own data swapped in
 rather than built up from nothing.
 
 An exhibition is a light, static Vue 3 front-end for one published dataset.
-It combines three `@museumwnf` packages from npmjs:
+It combines these `@museumwnf` packages from npmjs:
 
 | Package | Role |
 | --- | --- |
