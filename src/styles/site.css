@@ -16,32 +16,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,400&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
 
 /* ── Palette ────────────────────────────────────────────────────────────────
-   TODO(webdesigner): this is water-in-islam's own palette (the reference
-   site this template was built from), carried over unchanged so the
-   template stays a real, working exhibition. Replace every value below
-   with your own exhibition's colours — see "Webdesigner — theming the
-   website" in README.md.
-
-   The exhibitions client takes its six colours from per-deployment
-   `VUE_APP_VO_*` variables rather than a checked-in SCSS file:
+   This exhibition's own six colours. The legacy exhibitions client took
+   them from per-deployment `VUE_APP_VO_*` variables, checked in nowhere:
+   read them off the legacy exhibition's compiled stylesheet, as Epic 1 did
+   (inventory-app#2021). water-in-islam's, for the scale:
 
      MAIN #000000 / MAIN_TEXT #ffffff    header rule, themes gutter, footer
-     SECONDARY #ffffff / SECONDARY_TEXT #000000
+     SECONDARY #ffffff / SECONDARY_TEXT #000000   the page, the theme pages
      CONTRAST #a3d6d9 / CONTRAST_TEXT #000000   theme titles, bottom banner
 
-   The contrast tone is the one thing that moves between sibling exhibitions,
-   and it is why every rule below reads a variable instead of a literal.
-
-   The same six values are also declared as `--mwnf-*` tokens in
-   theme/tokens.css, which is what a webdesigner edits; these names exist
-   because the views address the palette by them. */
+   They are placeholders until set, and `npm install` refuses to run while
+   one is left (scripts/check-placeholders.js): a new exhibition never ships
+   another exhibition's colours. theme/tokens.css reads them from here, and
+   the theme pages through its `--mwnf-dxa-theme-*` tokens. */
 :root {
-  --main-color:            #000000;
-  --main-text-color:       #ffffff;
-  --secondary-color:       #ffffff;
-  --secondary-text-color:  #000000;
-  --contrast-color:        #a3d6d9;
-  --contrast-text-color:   #000000;
+  --main-color:            __PALETTE_MAIN__;
+  --main-text-color:       __PALETTE_MAIN_TEXT__;
+  --secondary-color:       __PALETTE_SECONDARY__;
+  --secondary-text-color:  __PALETTE_SECONDARY_TEXT__;
+  --contrast-color:        __PALETTE_CONTRAST__;
+  --contrast-text-color:   __PALETTE_CONTRAST_TEXT__;
 
   --shadow-grey: #707070;
   --link-blue:   #0000ff;
