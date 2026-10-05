@@ -102,7 +102,7 @@ Three tokens appear across `package.json`, `vite.config.js`, `index.html`,
   word, no hyphens (`carpets`, `waterInIslam`).
 
 Set the exhibition's own colours too, the `__PALETTE_…__` placeholders of
-`src/styles/site.css` — step 7 says where they are.
+`theme/tokens.css` — step 7 says where they are.
 
 Then install the dataset package itself, which writes the real version
 range and the lockfile in one step:
@@ -124,14 +124,15 @@ your own — see the `TODO(dataset):` comment above each (fetch
 `https://unpkg.com/@museumwnf/<dataset>-data@latest/manifest.json` and
 enumerate `manifest.projects`).
 
-Unlike the gallery template, `tests/smoke.test.js` needs almost no matching
-per-site picks: most of its assertions already read the loaded fixture
-dynamically (an item with a `project_id`, a partner with `item_count`, a
-dynasty with a translated history block), skipping gracefully where your
-dataset has none. Two tests assert on water-in-islam's own curated
-theme-tree content specifically (an exact picture caption, a specific
-related-picture pair) and were removed for that reason — see the comment
-in place of them if you want to write your own equivalent later.
+Unlike the gallery template, `tests/smoke.test.js` needs no per-site picks:
+it runs the exhibition family's smoke test (`describeExhibitionSmoke`, from
+`@museumwnf/viewer-layout/dxa/testing`), which finds what it checks in your
+own package (an item with a `project_id`, a partner with `item_count`, a
+dynasty with a translated history). Pass `dynasties: false` if no dynasty of
+your exhibition has a translated history. The suite's documentation names
+the options for exact counts and a curated theme's titles; tests of your
+exhibition's own (water-in-islam's related-picture pairs, say) go after the
+call.
 
 **Proof:** `npm run test` and `npm run build` both pass.
 
@@ -152,11 +153,11 @@ and needs nothing here.
 
 ### 7. Theme (visual)
 
-See "Webdesigner — theming the website" below for the palette
-(`theme/tokens.css`). The exhibition's six colours in `src/styles/site.css` are
-placeholders (`__PALETTE_…__`) until you set them, and `npm install` refuses to
-run while one is left: legacy's `VUE_APP_VO_*` values, read off the legacy
-exhibition's compiled stylesheet (the comment above them says how).
+See "Webdesigner — theming the website" below for the palette. The
+exhibition's six colours in `theme/tokens.css` are placeholders
+(`__PALETTE_…__`) until you set them, and `npm install` refuses to run while
+one is left: legacy's `VUE_APP_VO_*` values, read off the legacy exhibition's
+compiled stylesheet (the comment above them says how).
 
 ### 8. Merge, record and discover
 
@@ -211,10 +212,13 @@ inside it.
 ## Webdesigner — theming the website
 
 The website's whole visual identity lives in the `theme/` folder:
-`tokens.css` (colors, fonts, spacing — the normal surface), `overrides.css`
-(escape hatch) and `assets/` (logo, banner, sponsor images). The palette itself
-is the six colours in `src/styles/site.css` (step 7 above); `tokens.css` reads
-them, so a colour change is made there once.
+`tokens.css` (the palette, and any token that differs from the family's
+theme), `overrides.css` (escape hatch) and `assets/` (logo, banner, sponsor
+images). The palette is the six colours at the top of `tokens.css` (step 7
+above): the exhibition family's theme,
+`@museumwnf/viewer-layout/dxa/exhibition.css`, reads them for every surface,
+text and border, so a colour change is made there once. Any token of that
+theme set again in `tokens.css` wins over it.
 
 Small changes can be made straight in the browser with the pencil button,
 like the translator flow above — styling changes are reviewed, they do not
@@ -237,7 +241,9 @@ merge automatically. For real design work, use the live preview:
    a line shows `Local: http://localhost:5173/`, then open
    **http://localhost:5173** in your browser.
 3. **Edit `theme/`, watch it live.** Every save refreshes the browser
-   automatically. `tokens.css` lists every knob with a comment; put images
+   automatically. Change the palette in `tokens.css`, or set any token of
+   the family's theme there again — every one, and what it does, is listed
+   in `node_modules/@museumwnf/viewer-layout/src/tokens.reference.css`; put images
    into `theme/assets/` and reference them from the theme's own CSS (the
    banner and the sponsor logos come from the dataset). Anything a token
    cannot express goes into `overrides.css`. A change to a layout component itself
@@ -338,7 +344,9 @@ reads. Addresses the site used to publish go in `legacyRoutes`,
 redirect-only. The catch-all is viewer-core's; do not declare a second one.
 
 **9. A website owns its theme, and nothing else.** `theme/tokens.css` for
-the chrome. Layout belongs to `viewer-layout`, behaviour to `viewer-core`.
+its palette and what differs from the family's theme. The family's own
+stylesheet and smoke test, the layout and the pages belong to
+`viewer-layout`, behaviour to `viewer-core`.
 
 **10. CI is thin and pinned.** The workflows below call
 `museumwithnofrontiers/viewer-workflows` at an exact version.
