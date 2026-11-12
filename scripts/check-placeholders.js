@@ -16,12 +16,10 @@
 //     theme/tokens.css                     -> only this script catches it
 //     (inventory-app#2046/#2047: a new site never ships another's colours)
 //
-// The curatorial picks (`projectColors`/`noticeProjects` in
-// src/dataset.config.js) are deliberately NOT guarded here: unlike a name or
-// a namespace, an incomplete map cannot break `npm install` or the build,
-// only leave a chip on its default colour — `npm run test` already catches
-// a missing manifest entry, loudly (see "gates the related-database link...
-// on the manifest project" in tests/smoke.test.js).
+// The curatorial pick (`noticeProjects` in src/dataset.config.js) is
+// deliberately NOT guarded here: unlike a name or a namespace, an incomplete
+// list cannot break `npm install` or the build — `npm run test` already
+// checks every project's notice and chip against the package, loudly.
 //
 // The files are listed rather than swept for the placeholder because
 // README.md and the comment in .github/workflows/ci.yml both name it on

@@ -118,11 +118,12 @@ was skipped.
 
 ### 4. The curatorial picks
 
-`src/dataset.config.js`'s `projectColors`/`noticeProjects` name specific
-project UUIDs from water-in-islam's own dataset and need replacing with
-your own — see the `TODO(dataset):` comment above each (fetch
-`https://unpkg.com/@museumwnf/<dataset>-data@latest/manifest.json` and
-enumerate `manifest.projects`).
+`src/dataset.config.js`'s `noticeProjects` names the projects whose item
+sheets carry legacy's Explore-partner notice — see its `TODO(dataset):`
+comment (fetch
+`https://unpkg.com/@museumwnf/<dataset>-data@latest/items.json`). The source
+chips need nothing: they come from each project's `home_site` in the
+package's `manifest.projects`.
 
 Unlike the gallery template, `tests/smoke.test.js` needs no per-site picks:
 it runs the exhibition family's smoke test (`describeExhibitionSmoke`, from
@@ -281,8 +282,8 @@ timeline entrance and credits, and the platform pages (the search how-to,
 the partners list, a partner's or institution's profile and objects, the
 search, timeline and collection results, the timeline gallery, the
 collection search form). What it takes is what differs between exhibitions:
-the dataset package, the name, the address, the project chips, the notice
-projects and the credits entry.
+the dataset package, the name, the address, the notice projects and the
+credits entry.
 
 Every route name and path the family registers is pinned inside
 viewer-layout to what every live DXA site already uses — never redeclare
